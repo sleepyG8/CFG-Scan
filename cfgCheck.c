@@ -1,15 +1,14 @@
 #include <Windows.h>
 #include <stdio.h>
 
+// Sleepy CFG scanner
 
 BYTE* VAFromRVA(DWORD rva, PIMAGE_NT_HEADERS nt, BYTE* base) {
     PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(nt);
 
-    //printf("hello\n");
     for (int i = 0; i < nt->FileHeader.NumberOfSections; i++, section++) {
         DWORD sectionVA = section->VirtualAddress;
         DWORD sectionSize = section->Misc.VirtualSize;
-           // printf("hello2\n");
 
         if (rva >= sectionVA && rva < (sectionVA + sectionSize)) {
             return base + section->PointerToRawData + (rva - sectionVA);
@@ -67,6 +66,7 @@ if (!id) {
     return 1;
 }
 
+// a lot of struct data
 if (argv[2]) {
 printf("GuardFlags: 0x%08X\n", id->GuardFlags);
 printf("Size: 0x%08X\n", id->Size);
@@ -94,8 +94,6 @@ printf("GuardCFDispatchFunctionPointer: 0x%016llX\n", id->GuardCFDispatchFunctio
 printf("GuardCFFunctionTable: 0x%016llX\n", id->GuardCFFunctionTable);
 printf("GuardCFFunctionCount: 0x%016llX\n", id->GuardCFFunctionCount);
 
-// CodeIntegrity is a nested struct—printf this based on how you define IMAGE_LOAD_CONFIG_CODE_INTEGRITY
-// Example:
 printf("CodeIntegrity.Flags: 0x%04X\n", id->CodeIntegrity.Flags);
 printf("CodeIntegrity.Catalog: 0x%04X\n", id->CodeIntegrity.Catalog);
 printf("CodeIntegrity.CatalogOffset: 0x%04X\n", id->CodeIntegrity.CatalogOffset);
